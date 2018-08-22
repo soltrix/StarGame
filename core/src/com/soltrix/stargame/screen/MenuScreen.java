@@ -2,27 +2,23 @@ package com.soltrix.stargame.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.base.Base2DScreen;
+import com.soltrix.stargame.base.Sprite;
+import com.soltrix.stargame.math.Rect;
 
-/*
+/**
  * Экран меню
  */
 
 public class MenuScreen extends Base2DScreen {
-    float SPEED = 1f;
 
-    SpriteBatch batch;
     Texture img;
-
-    Vector2 pos;
-    Vector2 v;
-    Vector2 touchPos;
-    Vector2 buf;
+    Sprite logo;
 
     public MenuScreen(Game game) {
         super(game);
@@ -31,16 +27,9 @@ public class MenuScreen extends Base2DScreen {
     @Override
     public void show() {
         super.show();
-        batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-        // изначальная позиция
-        pos = new Vector2(0,0);
-        // движение
-        //y = new Vector2(0f,1f);
-        //x = new Vector2(1f,0f);
-        v = new Vector2(0f,0f);
-        touchPos = new Vector2();
-        buf = new Vector2();
+        logo = new Sprite(new TextureRegion(img));
+        logo.setSize(23f, 23f);
     }
 
     @Override
@@ -48,56 +37,31 @@ public class MenuScreen extends Base2DScreen {
         super.render(delta);
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        buf.set(touchPos);
-        if (touchPos.cpy().sub(pos).len() > SPEED) {
-            pos.add(v);
-        } else {
-            pos.set(touchPos);
-            v.setZero();
-        }
+
         batch.begin();
-        batch.draw(img, pos.x, pos.y);
+        logo.draw(batch);
         batch.end();
-        pos.add(v);
+
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();
         img.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX, screenY, pointer, button);
-        touchPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        System.out.println("touchPos.x = " + touchPos.x + " touchPos.y = " + touchPos.y);
-        v.set(touchPos.cpy().sub(pos).setLength(SPEED));
-        return false;
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        super.touchUp(screenX, screenY, pointer, button);
-        return false;
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        super.keyDown(keycode);
-        return true;
-
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        super.keyUp(keycode);
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return super.keyTyped(character);
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return super.touchUp(touch, pointer);
     }
 }
