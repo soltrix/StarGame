@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.math.Rect;
+import com.soltrix.stargame.utils.Regions;
 
 public class Sprite extends Rect {
 
@@ -20,6 +21,10 @@ public class Sprite extends Rect {
         regions[0] = region;
     }
 
+    public Sprite(TextureRegion region, int rows, int cools, int frames) {
+        this.regions = Regions.split(region, rows, cools, frames);
+    }
+
     public void draw(SpriteBatch batch) {
         batch.draw(
                 regions[frame], // текущий регион
@@ -29,6 +34,12 @@ public class Sprite extends Rect {
                 scale, scale, // масштаб по оси x и y
                 angle // угол вращения
         );
+    }
+
+    public void setHeightProportion(float height) {
+        setHeight(height);
+        float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
+        setWidth(height * aspect);
     }
 
     public void resize(Rect worldBounds) {
