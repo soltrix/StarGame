@@ -2,6 +2,7 @@ package com.soltrix.stargame.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -26,6 +27,8 @@ public class GameScreen extends Base2DScreen {
 
     private BulletPool bulletPool = new BulletPool();
 
+    private Music music;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -41,6 +44,9 @@ public class GameScreen extends Base2DScreen {
             star[i] = new Star(atlas);
         }
         mainShip = new MainShip(atlas, bulletPool);
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
