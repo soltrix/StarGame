@@ -14,8 +14,8 @@ public class BulletPool extends SpritesPool<Bullet> {
         return new Bullet();
     }
 
-    @Override
-    protected void debugLog() {
-        System.out.println("active/free:" + activeObjects.size() + "/" + freeObjects.size());
-    }
+//    @Override
+//    protected void debugLog() {
+//        System.out.println("active/free:" + activeObjects.size() + "/" + freeObjects.size());
+//    }
 }
