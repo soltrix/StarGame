@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.base.Base2DScreen;
 import com.soltrix.stargame.math.Rect;
 import com.soltrix.stargame.screen.gamescreen.MainShip;
+import com.soltrix.stargame.screen.pool.BulletPool;
 import com.soltrix.stargame.screen.sprites.Background;
 import com.soltrix.stargame.screen.sprites.Star;
 
@@ -21,6 +23,8 @@ public class GameScreen extends Base2DScreen {
     private TextureAtlas atlas;
     private Star star[];
     private MainShip mainShip;
+
+    private BulletPool bulletPool = new BulletPool();
 
     public GameScreen(Game game) {
         super(game);
@@ -36,7 +40,7 @@ public class GameScreen extends Base2DScreen {
         for (int i = 0; i < star.length ; i++) {
             star[i] = new Star(atlas);
         }
-        mainShip = new MainShip(atlas);
+        mainShip = new MainShip(atlas, bulletPool);
     }
 
     @Override
@@ -57,6 +61,7 @@ public class GameScreen extends Base2DScreen {
             star[i].draw(batch);
         }
         mainShip.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -65,6 +70,7 @@ public class GameScreen extends Base2DScreen {
             star[i].update(delta);
         }
         mainShip.update(delta);
+        bulletPool.updateActiveSprites(delta);
     }
 
     public void checkCollisions() {
@@ -72,7 +78,7 @@ public class GameScreen extends Base2DScreen {
     }
 
     public void deleteAllDestroyed() {
-
+        bulletPool.freeAllDestroyedActiveSprites();
     }
 
     @Override
@@ -90,6 +96,7 @@ public class GameScreen extends Base2DScreen {
         super.dispose();
         bgTexture.dispose();
         atlas.dispose();
+        bulletPool.dispose();
     }
 
     @Override
@@ -102,5 +109,17 @@ public class GameScreen extends Base2DScreen {
     public boolean keyUp(int keycode) {
         mainShip.keyUp(keycode);
         return super.keyUp(keycode);
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        mainShip.touchDown(touch, pointer);
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        mainShip.touchUp(touch, pointer);
+        return super.touchUp(touch, pointer);
     }
 }
