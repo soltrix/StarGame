@@ -1,5 +1,6 @@
 package com.soltrix.stargame.screen.gamescreen;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.base.Sprite;
@@ -14,12 +15,15 @@ public class Ship extends Sprite {
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
 
+    private Sound sound;
+
     protected Vector2 bulletV = new Vector2();
     protected float bulletHeight;
     protected int bulletDamage;
 
-    public Ship(TextureRegion region, int rows, int cools, int frames) {
+    public Ship(TextureRegion region, int rows, int cools, int frames, Sound sound) {
         super(region, rows, cools, frames);
+        this.sound = sound;
     }
 
     @Override
@@ -30,5 +34,6 @@ public class Ship extends Sprite {
     protected void  shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+        sound.play();
     }
 }
