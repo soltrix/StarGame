@@ -9,6 +9,12 @@ import com.soltrix.stargame.screen.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
+    private enum State {DESCENT, FIGHT}
+
+    private State state;
+
+    private Vector2 descentV = new Vector2(0, -0.15f);
+
     private MainShip mainShip;
     private Vector2 v0 = new Vector2();
 
@@ -22,14 +28,24 @@ public class Enemy extends Ship {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
-        reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
-            reloadTimer = 0f;
-            shoot();
-        }
-        if (getBottom() < worldBounds.getBottom()) {
-            boom();
-            destroy();
+        switch (state) {
+            case DESCENT:
+                if (getTop() <= worldBounds.getTop()) {
+                    v.set(v0);
+                    state = State.FIGHT;
+                }
+                break;
+            case FIGHT:
+                reloadTimer += delta;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+                if (getBottom() < worldBounds.getBottom()) {
+                    boom();
+                    destroy();
+                }
+                break;
         }
     }
 
@@ -53,7 +69,8 @@ public class Enemy extends Ship {
         this.reloadInterval = reloadInterval;
         this.hp = hp;
         setHeightProportion(height);
-        v.set(v0);
+        v.set(descentV);
         reloadTimer = reloadInterval;
+        state = State.DESCENT;
     }
 }
