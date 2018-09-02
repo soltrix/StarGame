@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.base.Base2DScreen;
 import com.soltrix.stargame.math.Rect;
+import com.soltrix.stargame.screen.gamescreen.Bullet;
+import com.soltrix.stargame.screen.gamescreen.Enemy;
 import com.soltrix.stargame.screen.gamescreen.Explosion;
 import com.soltrix.stargame.screen.gamescreen.MainShip;
 import com.soltrix.stargame.screen.pool.BulletPool;
@@ -19,6 +21,8 @@ import com.soltrix.stargame.screen.pool.ExplosionPool;
 import com.soltrix.stargame.screen.sprites.Background;
 import com.soltrix.stargame.screen.sprites.Star;
 import com.soltrix.stargame.utils.EnemyEmitter;
+
+import java.util.List;
 
 public class GameScreen extends Base2DScreen {
 
@@ -103,7 +107,33 @@ public class GameScreen extends Base2DScreen {
     }
 
     public void checkCollisions() {
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();
+            if (enemy.pos.dst2(mainShip.pos) < minDist * minDist) {
+                enemy.destroy();
+                return;
+            }
+        }
 
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemyList){
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != mainShip || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
+            }
+        }
     }
 
     public void deleteAllDestroyed() {
