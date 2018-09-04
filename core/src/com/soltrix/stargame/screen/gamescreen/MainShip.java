@@ -2,11 +2,14 @@ package com.soltrix.stargame.screen.gamescreen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.soltrix.stargame.base.Sprite;
 import com.soltrix.stargame.math.Rect;
+import com.soltrix.stargame.screen.GameScreen;
 import com.soltrix.stargame.screen.pool.BulletPool;
+import com.soltrix.stargame.screen.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
@@ -22,19 +25,25 @@ public class MainShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound) {
-        super(atlas.findRegion("main_ship"), 1, 2, 2, sound);
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound, ExplosionPool explosionPool) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2, sound, explosionPool);
         setHeightProportion(SHIP_HEIGHT);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletPool = bulletPool;
+    }
+
+    public void startNewGame() {
         this.bulletHeight = 0.01f;
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
-        this.bulletPool = bulletPool;
         this.reloadInterval = 0.4f;
+        this.hp = 100;
+        flushDestroy();
     }
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
@@ -142,5 +151,12 @@ public class MainShip extends Ship {
 
     private void stop() {
         v.setZero();
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom());
     }
 }

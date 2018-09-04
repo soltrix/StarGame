@@ -38,9 +38,10 @@ public class Ship extends Sprite {
         this.worldBounds = worldBounds;
     }
 
-    public Ship(TextureRegion region, int rows, int cools, int frames, Sound sound) {
+    public Ship(TextureRegion region, int rows, int cools, int frames, Sound sound, ExplosionPool explosionPool) {
         super(region, rows, cools, frames);
         this.sound = sound;
+        this.explosionPool = explosionPool;
     }
 
     @Override
@@ -72,5 +73,14 @@ public class Ship extends Sprite {
         frame = 1;
         damageAnimateTimer = 0f;
         hp -= damage;
+        if (hp <= 0) {
+            destroy();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
     }
 }

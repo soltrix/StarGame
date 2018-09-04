@@ -42,6 +42,7 @@ public class Enemy extends Ship {
                     shoot();
                 }
                 if (getBottom() < worldBounds.getBottom()) {
+                    mainShip.damage(bulletDamage);
                     destroy();
                 }
                 break;
@@ -71,12 +72,6 @@ public class Enemy extends Ship {
         v.set(descentV);
         reloadTimer = reloadInterval;
         state = State.DESCENT;
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        boom();
     }
 
     public boolean isBulletCollision(Rect bullet) {
