@@ -82,9 +82,14 @@ public class Ship extends Sprite {
     public void destroy() {
         super.destroy();
         boom();
+        hp = 0;
     }
 
     public int getHp() {
         return hp;
+    }
+
+    public Vector2 getV() {
+        return v;
     }
 }

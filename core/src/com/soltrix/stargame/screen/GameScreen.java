@@ -19,11 +19,11 @@ import com.soltrix.stargame.screen.gamescreen.ButtonNewGame;
 import com.soltrix.stargame.screen.gamescreen.Enemy;
 import com.soltrix.stargame.screen.gamescreen.MainShip;
 import com.soltrix.stargame.screen.gamescreen.MessageGameOver;
+import com.soltrix.stargame.screen.gamescreen.TrackingStars;
 import com.soltrix.stargame.screen.pool.BulletPool;
 import com.soltrix.stargame.screen.pool.EnemyPool;
 import com.soltrix.stargame.screen.pool.ExplosionPool;
 import com.soltrix.stargame.screen.sprites.Background;
-import com.soltrix.stargame.screen.sprites.Star;
 import com.soltrix.stargame.utils.EnemyEmitter;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private Background background;
     private Texture bgTexture;
     private TextureAtlas atlas;
-    private Star star[];
+    private TrackingStars star[];
     private MainShip mainShip;
 
     private BulletPool bulletPool = new BulletPool();
@@ -80,11 +80,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         music.play();
         bgTexture = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bgTexture));
-        star = new Star[STAR_COUNT];
+        star = new TrackingStars[STAR_COUNT];
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
-        for (int i = 0; i < star.length ; i++) {
-            star[i] = new Star(atlas);
-        }
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
@@ -94,6 +91,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, enemyPool);
         messageGameOver = new MessageGameOver(atlas);
         buttonNewGame = new ButtonNewGame(atlas, this);
+        for (int i = 0; i < star.length ; i++) {
+            star[i] = new TrackingStars(atlas, mainShip.getV());
+        }
         font = new Font("font/font.fnt", "font/font.png");
         font.setWorldSize(FONT_SIZE);
         startNewGame();

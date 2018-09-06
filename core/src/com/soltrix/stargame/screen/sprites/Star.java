@@ -8,7 +8,7 @@ import com.soltrix.stargame.math.Rnd;
 
 public class Star extends Sprite {
 
-    private Vector2 v = new Vector2();
+    protected Vector2 v = new Vector2();
     private  Rect worldBounds;
 
     public Star(TextureAtlas atlas) {
