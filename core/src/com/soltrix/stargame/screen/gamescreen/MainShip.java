@@ -2,12 +2,9 @@ package com.soltrix.stargame.screen.gamescreen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.soltrix.stargame.base.Sprite;
 import com.soltrix.stargame.math.Rect;
-import com.soltrix.stargame.screen.GameScreen;
 import com.soltrix.stargame.screen.pool.BulletPool;
 import com.soltrix.stargame.screen.pool.ExplosionPool;
 
@@ -77,9 +74,6 @@ public class MainShip extends Ship {
             case Input.Keys.RIGHT:
                 pressedRight = true;
                 moveRight();
-                break;
-            case Input.Keys.UP:
-                shoot();
                 break;
         }
     }
